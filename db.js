@@ -26,7 +26,6 @@ db.exec(`
   );
 `);
 
-
 // need to flush sqlite file before close
 // probably will matter later when we have multiple servers
 process.on('exit', () => db.close()); 

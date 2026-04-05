@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const { createReview, getReviews, getAllReviews } = require('./queries');
 
+
+// POST /reviews
+// accepts a new review from the client and stores it in the database.
+// user_id is trusted from the request body for now
 router.post('/reviews', (req, res) => {
     const { user_id, rating, subject, description } = req.body;
 
@@ -16,6 +20,8 @@ router.post('/reviews', (req, res) => {
     }
 });
 
+// GET /reviews 
+// returns all reviews from the database, ordered by most recent first
 router.get('/reviews', (req, res) => {
     try {
         const reviews = getAllReviews()
