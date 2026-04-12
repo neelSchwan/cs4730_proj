@@ -28,4 +28,25 @@ function createReview({ user_id, rating, subject, description }) {
 function getAllReviews() {
     return selectAllReviews.all();
 }
-module.exports = { createReview, getAllReviews };
+
+// Prepared statement for inserting a new user into the database.
+const insertUser = db.prepare(`
+  INSERT INTO users (username) VALUES (@username)
+`);
+
+// Prepared statement for fetching a user by their username.
+const selectUserByUsername = db.prepare(`
+  SELECT * FROM users WHERE username = @username
+`);
+
+// Inserts a new user into the database and returns the result.
+function createUser({ username }) {
+  return insertUser.run({ username });
+}
+
+// Returns a single user object matching the given username, or undefined if not found.
+function getUserByUsername({ username }) {
+  return selectUserByUsername.get({ username });
+}
+
+module.exports = { createReview, getAllReviews, createUser, getUserByUsername};
