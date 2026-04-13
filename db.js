@@ -17,7 +17,8 @@ db.exec(`
     rating REAL NOT NULL,
     subject TEXT NOT NULL,
     description TEXT NOT NULL,
-    timestamp TEXT NOT NULL
+    timestamp TEXT NOT NULL,
+    hotness INTEGER NOT NULL DEFAULT 5
   );
 
   CREATE TABLE IF NOT EXISTS users (

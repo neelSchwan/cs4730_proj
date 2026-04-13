@@ -3,8 +3,8 @@ const db = require("./db");
 // Prepared statement for inserting a new review into the database.
 // Uses named parameters (@param) to bind values
 const insertReview = db.prepare(`
-    INSERT INTO reviews (user_id, rating, subject, description, timestamp)
-    VALUES (@user_id, @rating, @subject, @description, @timestamp)
+    INSERT INTO reviews (user_id, rating, subject, description, timestamp, hotness)
+    VALUES (@user_id, @rating, @subject, @description, @timestamp, @hotness)
 `);
 
 // Prepared statement for fetching all reviews, newest first
@@ -20,7 +20,8 @@ function createReview({ user_id, rating, subject, description }) {
     rating,
     subject,
     description,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    hotness: 5
   });
 }
 
