@@ -23,21 +23,27 @@ const selectAllReviews = db.prepare(`
 // Inserts a new review into the database.
 // timestamp is tbd, i thoguth it would be required server-side to make sure nodes are consistent
 function createReview({ user_id, rating, subject, description }) {
-  return insertReview.run({
-    user_id,
-    rating,
-    subject,
-    description,
-    timestamp: new Date().toISOString(),
-    hotness: 5
-  });
+  const row = {                                                                     
+    user_id,                                                                        
+    rating,                                                                         
+    subject,                                                                        
+    description,                                                                    
+    timestamp: new Date().toISOString(),                                            
+    hotness: 5,                                                                     
+    origin_id: randomUUID()                                                         
+  };                                                                                
+  const result = insertReview.run(row);
+  return { lastInsertRowid: result.lastInsertRowid, review: { ...row, review_id: result.lastInsertRowid } };                                                       
+}
+
+function createGossipReview({ user_id, rating, subject, description, timestamp, hotness, origin_id }) {
+  return insertGossipReview.run({ user_id, rating, subject, description, timestamp, hotness, origin_id });
 }
 
 // Returns all reviews as an array of objects, ordered by most recent first
 function getAllReviews() {
     return selectAllReviews.all();
 }
-
 // Prepared statement for inserting a new user into the database.
 const insertUser = db.prepare(`
   INSERT INTO users (username) VALUES (@username)
@@ -58,4 +64,4 @@ function getUserByUsername({ username }) {
   return selectUserByUsername.get({ username });
 }
 
-module.exports = { createReview, getAllReviews, createUser, getUserByUsername};
+module.exports = { createReview, createGossipReview, getAllReviews, createUser, getUserByUsername };

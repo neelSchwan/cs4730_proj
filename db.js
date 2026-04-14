@@ -18,7 +18,8 @@ db.exec(`
     subject TEXT NOT NULL,
     description TEXT NOT NULL,
     timestamp TEXT NOT NULL,
-    hotness INTEGER NOT NULL DEFAULT 5
+    hotness INTEGER NOT NULL DEFAULT 5,
+    origin_id TEXT UNIQUE
   );
 
   CREATE TABLE IF NOT EXISTS users (
