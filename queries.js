@@ -1,10 +1,18 @@
 const db = require("./db");
+const { randomUUID } = require("crypto");
 
 // Prepared statement for inserting a new review into the database.
 // Uses named parameters (@param) to bind values
 const insertReview = db.prepare(`
-    INSERT INTO reviews (user_id, rating, subject, description, timestamp, hotness)
-    VALUES (@user_id, @rating, @subject, @description, @timestamp, @hotness)
+    INSERT INTO reviews (user_id, rating, subject, description, timestamp, hotness, origin_id)
+    VALUES (@user_id, @rating, @subject, @description, @timestamp, @hotness, @origin_id)
+`);
+
+// Prepared statement for inserting a review received via gossip.
+// origin_id and hotness come from the peer so we don't reset them.
+const insertGossipReview = db.prepare(`
+    INSERT OR IGNORE INTO reviews (user_id, rating, subject, description, timestamp, hotness, origin_id)
+    VALUES (@user_id, @rating, @subject, @description, @timestamp, @hotness, @origin_id)
 `);
 
 // Prepared statement for fetching all reviews, newest first
