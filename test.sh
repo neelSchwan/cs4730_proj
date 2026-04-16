@@ -26,7 +26,7 @@ echo "node 4:"; curl -s http://$N4/reviews; echo ""
 echo "node 5:"; curl -s http://$N5/reviews; echo ""
 
 echo "--- posting review with fail-rate=0.9 on node 2 ---"
-echo "(restart node 2 with --fail-rate=0.9, then press enter)"
+echo "(on linux-072: Ctrl+C the node, run 'bash node2_failrate.sh', then press enter here)"
 read
 
 curl -s -X POST http://$N2/reviews -H "Content-Type: application/json" -d '{"user_id":1,"rating":3,"subject":"Fail Rate Test","description":"testing with high drop rate"}'
