@@ -9,19 +9,18 @@
 //   3. Reviews with hotness <= 1 are NOT spread further
 //
 // When multiple reviews are queued, hottest go first.
-// Can also set FAIL_RATE env var (0.0–1.0) to simulate random send failures.
-// TODO: MAKE FAIL_RATE A CLI ARG rather than env variable
+// Pass --fail-rate=0.0–1.0 as a CLI arg to simulate random send failures.
 
-const FAIL_RATE = parseFloat(process.env.FAIL_RATE || '0');
-
+let FAIL_RATE = 0;
 let peers = [];
 let fanout = 2;
 
-// Called once at startup with the list of peer "host:port" strings and fanout k.
-// Each gossip hop picks k random peers to send to rather than broadcasting to all.
-function init(peerList, k) {
+// Called once at startup with the list of peer "host:port" strings, fanout k,
+// and optional failRate (0.0–1.0) to simulate random send failures.
+function init(peerList, k, failRate = 0) {
   peers = peerList;
   fanout = k ?? 2;
+  FAIL_RATE = failRate;
 }
 
 // prio queue: reviews waiting to be spread, sorted hottest-first.
@@ -78,7 +77,7 @@ async function spreadToPeers(review) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(review),
       });
-      console.log(`[gossip] → ${peer}  origin=${review.origin_id}  hotness=${review.hotness}  [${res.status}]`);
+      console.log(`[gossip] -> ${peer}  origin=${review.origin_id}  hotness=${review.hotness}  [${res.status}]`);
     } catch (err) {
       console.error(`[gossip] ${peer} unreachable: ${err.message}`);
     }

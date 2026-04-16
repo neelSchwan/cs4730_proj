@@ -1,9 +1,10 @@
 const Database = require('better-sqlite3');
+const { dbPath } = require('./config');
 
 let db;
 
 try {
-    db = new Database(process.env.DB_PATH || 'db.sqlite', { verbose: console.log }); // creates db if doesn't exist
+    db = new Database(dbPath, { verbose: console.log }); // creates db if doesn't exist
 } catch (err) {
     console.error('couldnt to open the db:', err.message);
     process.exit(1);
