@@ -65,6 +65,7 @@ router.post('/users', (req, res) => {
 // If the review is new to us, keep spreading!!.
 router.post('/internal/reviews', (req, res) => {
     const { user_id, rating, subject, description, timestamp, hotness, origin_id } = req.body;
+    console.log(`[gossip recv] origin=${origin_id} hotness=${hotness}`);
 
     if (!origin_id) {
         return res.status(400).json({ error: 'missing origin_id' });
